@@ -1,0 +1,46 @@
+---
+import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
+import BaseHead from '../components/BaseHead.astro';
+import { getRecentTracks } from '../lib/lastFM';
+import { Song } from '../components/Song';
+
+let recentTracks = await getRecentTracks();
+recentTracks.length = 16;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <BaseHead title={`${SITE_TITLE} home`} description={SITE_DESCRIPTION} />
+  </head>
+
+  <div class="h-full text-center flex select-none all:transition-400">
+    <div class="ma">
+      <div
+        class="text-5xl fw100 animate-fade-in animate-count-1 animate-duration-1s"
+      >
+        spotify
+      </div>
+      <div
+        class="text-2xl fw100 animate-fade-in animate-count-1 animate-duration-1s"
+      >
+        recent listens
+      </div>
+
+      <div class="grid grid-cols-4 gap-4 mt-24">
+        {
+          recentTracks.map((t) => {
+            return (
+              <Song
+                client:load
+                artist={t.artist}
+                name={t.name}
+                cover={t.image!!}
+              />
+            );
+          })
+        }
+      </div>
+    </div>
+  </div>
+</html>
